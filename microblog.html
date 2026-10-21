@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniBlog</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#f3eee7;
+    color:#272522;
+    font-family:Arial,sans-serif
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #ddd5ca;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 8%;
+    position:sticky;
+    top:0;
+    z-index:10
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold
+}
+
+.logo span{
+    color:#f06449
+}
+
+nav{
+    display:flex;
+    gap:8px
+}
+
+nav button{
+    background:transparent;
+    border:0;
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold
+}
+
+nav button:hover{
+    background:#f8eee8
+}
+
+.container{
+    width:min(750px,92%);
+    margin:35px auto
+}
+
+.composer,.card,.post{
+    background:#fffaf2;
+    border:1px solid #e5ddd2;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 7px 20px rgba(0,0,0,.05)
+}
+
+.composer h2{
+    margin-top:0
+}
+
+textarea{
+    width:100%;
+    height:110px;
+    resize:vertical;
+    border:1px solid #d5ccc1;
+    border-radius:12px;
+    padding:14px;
+    font-size:15px;
+    font-family:Arial;
+    outline:none
+}
+
+textarea:focus{
+    border-color:#f06449
+}
+
+.composerBottom{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:12px
+}
+
+#counter{
+    color:#777;
+    font-size:13px;
+    margin-right:auto
+}
+
+.mediaButton{
+    border:1px solid #ddd3c8;
+    background:white;
+    padding:9px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:13px
+}
+
+.postButton{
+    border:0;
+    background:#f06449;
+    color:white;
+    padding:10px 20px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer
+}
+
+.postButton:hover{
+    background:#dc523b
+}
+
+.post{
+    margin-top:18px
+}
+
+.postHeader{
+    display:flex;
+    align-items:center;
+    gap:12px
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:#f6c6b8;
+    display:grid;
+    place-items:center;
+    font-weight:bold;
+    color:#8c3828
+}
+
+.userName{
+    font-weight:bold
+}
+
+.handle{
+    color:#777;
+    font-size:13px
+}
+
+.postText{
+    margin:15px 0;
+    line-height:1.6
+}
+
+.postImage,.postVideo{
+    width:100%;
+    max-height:420px;
+    object-fit:cover;
+    border-radius:14px
+}
+
+.actions{
+    border-top:1px solid #e8dfd4;
+    padding-top:12px;
+    margin-top:14px;
+    display:flex;
+    gap:20px
+}
+
+.actions button{
+    border:0;
+    background:none;
+    cursor:pointer;
+    color:#555;
+    font-size:14px
+}
+
+.actions button:hover{
+    color:#f06449
+}
+
+.liked{
+    color:#e24c37!important;
+    font-weight:bold
+}
+
+.peopleRow{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 0;
+    border-bottom:1px solid #e6ded3
+}
+
+.peopleInfo{
+    flex:1
+}
+
+.followButton{
+    border:1px solid #f06449;
+    background:white;
+    color:#f06449;
+    padding:8px 14px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold
+}
+
+.following{
+    background:#f06449;
+    color:white
+}
+
+.profileCard{
+    background:#fffaf2;
+    border:1px solid #e5ddd2;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:20px
+}
+
+.profileTop{
+    display:flex;
+    align-items:center;
+    gap:18px
+}
+
+.bigAvatar{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#f6c6b8;
+    display:grid;
+    place-items:center;
+    font-size:25px;
+    font-weight:bold;
+    color:#8c3828
+}
+
+.stats{
+    display:flex;
+    gap:30px;
+    margin-top:20px
+}
+
+.stats b{
+    display:block;
+    font-size:18px
+}
+
+.stats span{
+    color:#777;
+    font-size:12px
+}
+
+.hidden{
+    display:none
+}
+
+.muted{
+    color:#777;
+    font-size:14px
+}
+
+#preview{
+    margin-top:12px
+}
+
+.previewMedia{
+    width:100%;
+    max-height:300px;
+    object-fit:cover;
+    border-radius:12px
+}
+
+dialog{
+    width:min(550px,90%);
+    border:0;
+    border-radius:18px;
+    padding:0;
+    box-shadow:0 20px 70px rgba(0,0,0,.3)
+}
+
+dialog::backdrop{
+    background:rgba(0,0,0,.45)
+}
+
+.commentHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px;
+    border-bottom:1px solid #ddd
+}
+
+.commentHeader button{
+    border:0;
+    background:none;
+    cursor:pointer;
+    font-size:18px
+}
+
+.comment{
+    padding:13px 20px;
+    border-bottom:1px solid #eee
+}
+
+.commentInput{
+    display:flex;
+    gap:8px;
+    padding:15px
+}
+
+.commentInput input{
+    flex:1;
+    padding:11px;
+    border:1px solid #ccc;
+    border-radius:9px
+}
+
+.commentInput button{
+    background:#f06449;
+    color:white;
+    border:0;
+    padding:10px 17px;
+    border-radius:9px;
+    cursor:pointer
+}
+
+#message{
+    position:fixed;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#272522;
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    opacity:0;
+    transition:.3s
+}
+
+#message.show{
+    opacity:1
+}
+
+@media(max-width:600px){
+    .topbar{padding:0 4%}
+    .container{margin-top:20px}
+    .composerBottom{flex-wrap:wrap}
+    #counter{width:100%}
+}
+</style>
+</head>
+
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        Mini<span>Blog</span>
+    </div>
+
+    <nav>
+        <button onclick="showPage('home')">Home</button>
+        <button onclick="showPage('people')">People</button>
+        <button onclick="showPage('profile')">My Profile</button>
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- HOME -->
+
+<section id="homePage">
+
+<div class="composer">
+
+<h2>What's happening?</h2>
+
+<textarea
+id="postText"
+maxlength="280"
+placeholder="What's happening..."></textarea>
+
+<div class="composerBottom">
+
+<span id="counter">0/280</span>
+
+<label class="mediaButton">
+
+📷 Photo / Video
+
+<input
+type="file"
+id="mediaInput"
+accept="image/*,video/*"
+hidden>
+
+</label>
+
+<button class="postButton" onclick="createPost()">
+Post
+</button>
+
+</div>
+
+<div id="preview"></div>
+
+</div>
+
+
+<div id="feed"></div>
+
+</section>
+
+
+
+<!-- PEOPLE -->
+
+<section id="peoplePage" class="hidden">
+
+<div class="card">
+
+<h2>People</h2>
+
+<p class="muted">
+Follow people to see their posts on your home feed.
+</p>
+
+<div id="peopleList"></div>
+
+</div>
+
+</section>
+
+
+
+<!-- PROFILE -->
+
+<section id="profilePage" class="hidden">
+
+<div id="profile"></div>
+
+<div id="profilePosts"></div>
+
+</section>
+
+</main>
+
+
+
+<!-- COMMENT WINDOW -->
+
+<dialog id="commentBox">
+
+<div class="commentHeader">
+
+<h3>Comments</h3>
+
+<button onclick="closeComments()">✕</button>
+
+</div>
+
+<div id="comments"></div>
+
+<div class="commentInput">
+
+<input
+id="commentText"
+placeholder="Write a comment...">
+
+<button onclick="addComment()">
+Send
+</button>
+
+</div>
+
+</dialog>
+
+
+<div id="message"></div>
+
+
+
+<script>
+
+/* CURRENT USER */
+
+const currentUser={
+    id:"me",
+    name:"Bhuvanika",
+    handle:"@bhuvanika",
+    bio:"Happy weekend all!!!"
+};
+
+
+/* USERS */
+
+let users=[
+
+{
+    id:"u1",
+    name:"Shiv",
+    handle:"@shiv",
+    bio:"Photography, coffee & code.",
+    following:true
+},
+
+{
+    id:"u2",
+    name:"Ananya",
+    handle:"@ananya",
+    bio:"Food lover • Chennai",
+    following:false
+},
+
+{
+    id:"u3",
+    name:"Kavin",
+    handle:"@kavin",
+    bio:"Building little things.",
+    following:true
+}
+
+];
+
+
+/* POSTS */
+
+let posts=[
+
+{
+    id:1,
+    user:"u1",
+    text:"Happy weekend all!!!",
+    likes:1,
+    liked:false,
+    comments:[
+        {
+            name:"Bhuvanika",
+            text:"Hope you enjoy!"
+        }
+    ],
+    media:null
+},
+
+{
+    id:2,
+    user:"u2",
+    text:"Thank you everyone for the lovely wishes ❤️",
+    likes:3,
+    liked:false,
+    comments:[],
+    media:null
+},
+
+{
+    id:3,
+    user:"u3",
+    text:"Working on something exciting today. Stay tuned!",
+    likes:5,
+    liked:false,
+    comments:[],
+    media:null
+}
+
+];
+
+
+let selectedMedia=null;
+
+let activePost=null;
+
+
+/* GET USER */
+
+function getUser(id){
+
+    if(id==="me"){
+        return currentUser;
+    }
+
+    return users.find(user=>user.id===id);
+
+}
+
+
+/* INITIALS */
+
+function initials(name){
+
+    return name
+    .split(" ")
+    .map(word=>word[0])
+    .join("")
+    .slice(0,2)
+    .toUpperCase();
+
+}
+
+
+/* FEED */
+
+function renderFeed(){
+
+    const followedUsers=users
+    .filter(user=>user.following)
+    .map(user=>user.id);
+
+
+    const visiblePosts=posts.filter(post=>
+
+        post.user==="me" ||
+        followedUsers.includes(post.user)
+
+    );
+
+
+    const feed=document.getElementById("feed");
+
+
+    if(visiblePosts.length===0){
+
+        feed.innerHTML=`
+        <div class="card">
+        <p class="muted">
+        Follow people to see their posts here.
+        </p>
+        </div>
+        `;
+
+        return;
+    }
+
+
+    feed.innerHTML=
+    visiblePosts
+    .map(createPostHTML)
+    .join("");
+
+}
+
+
+/* POST DESIGN */
+
+function createPostHTML(post){
+
+    const user=getUser(post.user);
+
+    let media="";
+
+
+    if(post.media){
+
+        if(post.media.type.startsWith("video")){
+
+            media=`
+            <video
+            class="postVideo"
+            src="${post.media.data}"
+            controls>
+            </video>
+            `;
+
+        }else{
+
+            media=`
+            <img
+            class="postImage"
+            src="${post.media.data}"
+            alt="Post image">
+            `;
+
+        }
+
+    }
+
+
+    return`
+
+    <article class="post">
+
+    <div class="postHeader">
+
+    <div class="avatar">
+    ${initials(user.name)}
+    </div>
+
+    <div>
+
+    <div class="userName">
+    ${user.name}
+    </div>
+
+    <div class="handle">
+    ${user.handle} · just now
+    </div>
+
+    </div>
+
+    </div>
+
+
+    <div class="postText">
+    ${post.text}
+    </div>
+
+
+    ${media}
+
+
+    <div class="actions">
+
+    <button
+    class="${post.liked?"liked":""}"
+    onclick="likePost(${post.id})">
+
+    ♥ ${post.likes}
+
+    </button>
+
+
+    <button
+    onclick="openComments(${post.id})">
+
+    💬 ${post.comments.length}
+
+    </button>
+
+
+    <button
+    onclick="openUserProfile('${post.user}')">
+
+    👤 View profile
+
+    </button>
+
+    </div>
+
+    </article>
+
+    `;
+
+}
+
+
+/* CREATE POST */
+
+function createPost(){
+
+    const text=
+    document.getElementById("postText")
+    .value.trim();
+
+
+    if(!text && !selectedMedia){
+
+        showMessage(
+        "Write something or add a photo/video.");
+
+        return;
+    }
+
+
+    function finishPost(mediaData){
+
+        posts.unshift({
+
+            id:Date.now(),
+
+            user:"me",
+
+            text:text || "Shared a photo/video.",
+
+            likes:0,
+
+            liked:false,
+
+            comments:[],
+
+            media:mediaData
+
+        });
+
+
+        document.getElementById("postText").value="";
+
+        document.getElementById("counter")
+        .textContent="0/280";
+
+        document.getElementById("mediaInput")
+        .value="";
+
+        document.getElementById("preview")
+        .innerHTML="";
+
+        selectedMedia=null;
+
+
+        renderFeed();
+
+        showMessage("Post created successfully!");
+
+    }
+
+
+    if(selectedMedia){
+
+        const reader=new FileReader();
+
+
+        reader.onload=function(){
+
+            finishPost({
+
+                type:selectedMedia.type,
+
+                data:reader.result
+
+            });
+
+        };
+
+
+        reader.readAsDataURL(selectedMedia);
+
+    }else{
+
+        finishPost(null);
+
+    }
+
+}
+
+
+/* CHARACTER COUNTER */
+
+document
+.getElementById("postText")
+.addEventListener("input",function(){
+
+    document.getElementById("counter")
+    .textContent=this.value.length+"/280";
+
+});
+
+
+/* PHOTO / VIDEO */
+
+document
+.getElementById("mediaInput")
+.addEventListener("change",function(){
+
+    const file=this.files[0];
+
+    if(!file)return;
+
+
+    selectedMedia=file;
+
+
+    const url=
+    URL.createObjectURL(file);
+
+
+    if(file.type.startsWith("video")){
+
+        document.getElementById("preview")
+        .innerHTML=`
+
+        <video
+        class="previewMedia"
+        src="${url}"
+        controls>
+        </video>
+
+        `;
+
+    }else{
+
+        document.getElementById("preview")
+        .innerHTML=`
+
+        <img
+        class="previewMedia"
+        src="${url}"
+        alt="Preview">
+
+        `;
+
+    }
+
+});
+
+
+/* LIKE */
+
+function likePost(id){
+
+    const post=
+    posts.find(post=>post.id===id);
+
+
+    post.liked=!post.liked;
+
+
+    if(post.liked){
+
+        post.likes++;
+
+    }else{
+
+        post.likes--;
+
+    }
+
+
+    renderFeed();
+
+}
+
+
+/* COMMENTS */
+
+function openComments(id){
+
+    activePost=id;
+
+
+    const post=
+    posts.find(post=>post.id===id);
+
+
+    const comments=
+    document.getElementById("comments");
+
+
+    if(post.comments.length===0){
+
+        comments.innerHTML=`
+
+        <div class="comment muted">
+        No comments yet. Be the first!
+        </div>
+
+        `;
+
+    }else{
+
+        comments.innerHTML=
+        post.comments
+        .map(comment=>`
+
+        <div class="comment">
+
+        <strong>
+        ${comment.name}
+        </strong>
+
+        ${comment.text}
+
+        </div>
+
+        `)
+        .join("");
+
+    }
+
+
+    document
+    .getElementById("commentBox")
+    .showModal();
+
+}
+
+
+function addComment(){
+
+    const input=
+    document.getElementById("commentText");
+
+
+    const text=
+    input.value.trim();
+
+
+    if(!text)return;
+
+
+    const post=
+    posts.find(post=>post.id===activePost);
+
+
+    post.comments.push({
+
+        name:currentUser.name,
+
+        text:text
+
+    });
+
+
+    input.value="";
+
+
+    openComments(activePost);
+
+    renderFeed();
+
+}
+
+
+function closeComments(){
+
+    document
+    .getElementById("commentBox")
+    .close();
+
+}
+
+
+/* FOLLOW */
+
+function toggleFollow(id){
+
+    const user=getUser(id);
+
+
+    user.following=
+    !user.following;
+
+
+    renderPeople();
+
+    renderFeed();
+
+
+    showMessage(
+        user.following
+        ?"Now following "+user.name
+        :"Unfollowed "+user.name
+    );
+
+}
+
+
+/* PEOPLE */
+
+function renderPeople(){
+
+    const list=
+    document.getElementById("peopleList");
+
+
+    list.innerHTML=
+    users.map(user=>`
+
+    <div class="peopleRow">
+
+    <div class="avatar">
+    ${initials(user.name)}
+    </div>
+
+
+    <div class="peopleInfo">
+
+    <strong>
+    ${user.name}
+    </strong>
+
+    <div class="handle">
+    ${user.handle}
+    </div>
+
+    <div class="muted">
+    ${user.bio}
+    </div>
+
+    </div>
+
+
+    <button
+    class="followButton
+    ${user.following?"following":""}"
+    onclick="toggleFollow('${user.id}')">
+
+    ${user.following
+    ?"Following"
+    :"Follow"}
+
+    </button>
+
+
+    <button
+    class="followButton"
+    onclick="openUserProfile('${user.id}')">
+
+    View
+
+    </button>
+
+    </div>
+
+    `)
+    .join("");
+
+}
+
+
+/* PROFILE */
+
+function renderProfile(userId="me"){
+
+    const user=getUser(userId);
+
+
+    const userPosts=
+    posts.filter(post=>
+    post.user===userId);
+
+
+    document.getElementById("profile")
+    .innerHTML=`
+
+    <div class="profileCard">
+
+    <div class="profileTop">
+
+    <div class="bigAvatar">
+    ${initials(user.name)}
+    </div>
+
+
+    <div>
+
+    <h2>
+    ${user.name}
+    </h2>
+
+    <div class="handle">
+    ${user.handle}
+    </div>
+
+    <p>
+    ${user.bio}
+    </p>
+
+    </div>
+
+    </div>
+
+
+    <div class="stats">
+
+    <div>
+
+    <b>
+    ${userPosts.length}
+    </b>
+
+    <span>
+    Posts
+    </span>
+
+    </div>
+
+
+    <div>
+
+    <b>
+    ${users.filter(u=>u.following).length}
+    </b>
+
+    <span>
+    Following
+    </span>
+
+    </div>
+
+
+    <div>
+
+    <b>
+    12
+    </b>
+
+    <span>
+    Followers
+    </span>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    `;
+
+
+    document.getElementById("profilePosts")
+    .innerHTML=
+
+    userPosts.length
+
+    ?userPosts.map(createPostHTML).join("")
+
+    :`
+
+    <div class="card">
+
+    <p class="muted">
+    No posts yet.
+    </p>
+
+    </div>
+
+    `;
+
+}
+
+
+/* OPEN PROFILE */
+
+function openUserProfile(id){
+
+    showPage("profile");
+
+    renderProfile(id);
+
+}
+
+
+/* NAVIGATION */
+
+function showPage(page){
+
+    document
+    .getElementById("homePage")
+    .classList.add("hidden");
+
+    document
+    .getElementById("peoplePage")
+    .classList.add("hidden");
+
+    document
+    .getElementById("profilePage")
+    .classList.add("hidden");
+
+
+    if(page==="home"){
+
+        document
+        .getElementById("homePage")
+        .classList.remove("hidden");
+
+        renderFeed();
+
+    }
+
+
+    if(page==="people"){
+
+        document
+        .getElementById("peoplePage")
+        .classList.remove("hidden");
+
+        renderPeople();
+
+    }
+
+
+    if(page==="profile"){
+
+        document
+        .getElementById("profilePage")
+        .classList.remove("hidden");
+
+        renderProfile();
+
+    }
+
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(text){
+
+    const message=
+    document.getElementById("message");
+
+
+    message.textContent=text;
+
+    message.classList.add("show");
+
+
+    setTimeout(()=>{
+
+        message.classList.remove("show");
+
+    },1800);
+
+}
+
+
+/* START */
+
+renderFeed();
+
+renderPeople();
+
+renderProfile();
+
+showPage("home");
+
+</script>
+
+</body>
+</html>
